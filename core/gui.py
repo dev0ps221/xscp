@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from flet import Container,Page,ElevatedButton,Column,Row,Dropdown,TextField,Text,dropdown,colors
-
+from os import environ,listdir
 class XSCPGUI:
     page = None
-    guipath = "~/"
+    guipath = f"/home/{environ['LOGNAME']}"
     topcontainer = Container(bgcolor=colors.CYAN,padding=10)
     container = Container()
     containercolumn = Column()
@@ -14,6 +14,7 @@ class XSCPGUI:
     destentry = TextField(label='repertoire cible')
     docopybutton = ElevatedButton(text='transferer')
     sources = []
+    guidircontent = []
     middlecontainer = Container()
     middlerow = Row()
     middlelabelcontainer = Container()
@@ -54,13 +55,29 @@ class XSCPGUI:
     containercolumn.controls = [topcontainer,middlecontainer,bottomcontainer]
     container.content = containercolumn
 
+    def setguipath(self,guipath):
+        self.guipath = guipath
+
     def pagewidth(self):
         return self.page.window_width if self.page else 0
     
     def pageheight(self):
         return self.page.window_width if self.page else 0
     
+    def showdircontent(self):
+        self.guidircontent = listdir(self.guipath)
+        self.update_dircontent_view()
 
+    def update_dircontent_view(self):
+        self.foldercontent.controls = []
+        for elem in self.guidircontent:
+            elemcontrolcontainer = Container()
+            elemcontrol = Row()
+            elemcontrolname = Text(value=elem)
+            elemcontrol.controls = [elemcontrolname]
+            elemcontrolcontainer.content = elemcontrol
+            self.foldercontent.controls.append(elemcontrolcontainer)
+        self.foldercontent.update()
 
     def reset_sizes(self):
         self.topcontainer.width = self.pagewidth()
@@ -88,3 +105,4 @@ class XSCPGUI:
         self.page.bgcolor = colors.BLUE_GREY_100
         self.reset_sizes()
         self.page.add(self.container)
+        self.showdircontent()
