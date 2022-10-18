@@ -17,6 +17,8 @@ class XSCPGUI:
     middlecolumn = Column()
     middlelabelcontainer = Container()
     middlelabel = Text(value='selectionnez les fichiers|repertoires à transferer')
+    foldercontentbox = Column()
+    foldercontentboxcontainer = Container()
     foldercontentcontainer = Container()
     foldercontent = Column()
     bottomcontainer = Container()
@@ -49,6 +51,12 @@ class XSCPGUI:
 
     def reset_sizes(self):
         self.topcontainer.width = self.pagewidth()
+        self.toprow.width = self.pagewidth()
+        self.hostentry.width = int(self.pagewidth()/5) - 10
+        self.pwdentry.width = int(self.pagewidth()/5) - 10
+        self.userentry.width = int(self.pagewidth()/5) - 10
+        self.destentry.width = int(self.pagewidth()/5) - 10
+        self.docopybutton.width = int(self.pagewidth()/5) - 10
         self.topcontainer.height = int(self.pageheight()*20/100)
         self.middlecontainer.width = self.pagewidth()
         self.middlecontainer.height = int(self.pageheight()*70/100)
