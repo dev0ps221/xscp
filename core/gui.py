@@ -11,8 +11,21 @@ class XSCPGUI:
     destentry = TextField(label='repertoire cible')
     sources = []
     middlecontainer = Container()
+    middlecolumn = Column()
+    middlelabelcontainer = Container()
     middlelabel = Text(value='selectionnez les fichiers|repertoires à transferer')
+    foldercontentcontainer = Container()
+    foldercontent = Column()
     bottomcontainer = Container()
+
+
+    topcontainer.content = toprow
+
+    foldercontentcontainer.content = foldercontent
+    middlelabelcontainer.content = middlelabel
+    middlecolumn.controls = [middlelabelcontainer,foldercontentcontainer]
+    middlecontainer.content = middlecolumn
+
 
 
     def pagewidth(self):
