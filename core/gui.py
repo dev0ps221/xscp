@@ -106,6 +106,8 @@ class XSCPGUI:
     def pageheight(self):
         return self.page.window_height if self.page else 0
     
+    def get_transfert_data(self):
+        host 
 
     def reset_sizes(self,ev=None):
         self.topcontainer.width = self.pagewidth()
