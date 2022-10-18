@@ -138,7 +138,7 @@ class XSCPGUI:
 
     def pickfilesresulst(self,e:FilePickerResultEvent):
         if e.path:
-            self.update_dir_sources([e.path.split('/')[-1],e.path])
+            self.update_dir_sources([[e.path.split('/')[-1],e.path]])
         if e.files:
             self.update_sources(e.files)
         self.update_sources_view()
