@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from os import system
+from os import popen
 from getpass import getpass
 class XSCPFUNCS:
     def get_keydata_from(self,src,key,ifnot):
@@ -20,9 +20,9 @@ class XSCPFUNCS:
         if len(sources) and dest and host and user and pwd:
             actionstr = f"sshpass -p '{pwd}' scp -rv  -o \"StrictHostKeyChecking no\" {self.build_sources_string(sources)} {user}@{host}:{dest}" 
             try:
-                system(actionstr)
+                return popen(actionstr).readlines()
             except Exception as e:
-                print(e)
+                print("")
 funcs = XSCPFUNCS()
 
 

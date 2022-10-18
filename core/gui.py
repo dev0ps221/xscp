@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+from core.funcs import XSCPFUNCS
 from flet import Container,Page,FilePicker,FilePickerResultEvent,ElevatedButton,Column,Row,Dropdown,TextField,Text,dropdown,icons,colors
 from os import path,listdir
 class XSCPGUI:
+    funcs = XSCPFUNCS()
     page = None
     pick_files_dialog = FilePicker()
     selectfilesbutton = ElevatedButton(
@@ -55,11 +57,13 @@ class XSCPGUI:
     containercolumn.controls = [topcontainer,middlecontainer,bottomcontainer]
     container.content = containercolumn
 
-    def init_transfert(self):
+    def init_transfert(self,ev):
         data = self.check_transfert_data()
         if data:
-            print('lets make the transfert')
-            print(data)
+            copyresults = self.funcs.docopy(data)
+            # print(copyresults)
+        else:
+            print('no enough data to start the copy')
 
 
     def update_sources(self,sourcesfiles):
@@ -129,10 +133,11 @@ class XSCPGUI:
                 'dest':dest,
                 'sources':sources,
             }
-        else return None
+        else : return None
         
 
     def reset_sizes(self,ev=None):
+        
         self.topcontainer.width = self.pagewidth()
         self.toprow.width = self.pagewidth()
         self.toprow.height = int(self.pageheight()*5/100)
@@ -175,9 +180,17 @@ class XSCPGUI:
             allow_multiple=True
         )
         self.selectfoldersbutton.on_click=lambda _: self.pick_files_dialog.get_directory_path()
+        self.docopybutton.on_click = self.init_transfert
         
     def _loop(self,page:Page):
-        self.page = page   
+        self.page = page  
+        self.page.window_width = 800
+        self.page.window_height = 600
+        self.page.window_max_width = 800
+        self.page.window_max_height = 600
+        self.page.window_resizable = False
+        self.page.window_minimizable = False
+        self.page.window_maximizable = False 
         self.page.bgcolor = colors.BLUE_GREY_100
         self.init_base_events()
         self.reset_sizes()
