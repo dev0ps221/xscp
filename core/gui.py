@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
-from flet import Container,Column,Row,DropDown,TextEntry,Text,dropdown,colors
-
+from flet import Container,Column,Row,DropDown,TextField,Text,dropdown,colors
 
 class XSCPGUI:
     page = None
     topcontainer = Container()
+    toprow = Row()
+    hostentry = TextField(label='hote')
+    pwdentry = TextField(label='mot de passe',password=True)
+    userentry = TextField(label='nom d\'utilisateur')
+    destentry = TextField(label='repertoire cible')
+    sources = []
     middlecontainer = Container()
+    middlelabel = Text(value='selectionnez les fichiers|repertoires à transferer')
     bottomcontainer = Container()
+
 
     def pagewidth(self):
         return self.page.window_width if self.page else 0
