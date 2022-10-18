@@ -14,13 +14,15 @@ class XSCPGUI:
     docopybutton = ElevatedButton(text='transferer')
     sources = []
     middlecontainer = Container()
-    middlecolumn = Column()
+    middlerow = Row()
     middlelabelcontainer = Container()
     middlelabel = Text(value='selectionnez les fichiers|repertoires à transferer')
     foldercontentbox = Column()
     foldercontentboxcontainer = Container()
     foldercontentcontainer = Container()
     foldercontent = Column()
+    sourceslist = Column()
+    sourceslistcontainer = Container()
     bottomcontainer = Container()
     bottomrow = Row()
     statustext = Text()
@@ -32,8 +34,14 @@ class XSCPGUI:
 
     foldercontentcontainer.content = foldercontent
     middlelabelcontainer.content = middlelabel
-    middlecolumn.controls = [middlelabelcontainer,foldercontentcontainer]
+    foldercontentbox.controls = [middlelabelcontainer,foldercontentcontainer]
+    foldercontentboxcontainer.content = foldercontentbox
+
+    sourceslistcontainer.content = sourceslist
+
+    middlerow.controls = [foldercontentboxcontainer,sourceslistcontainer]
     middlecontainer.content = middlecolumn
+
 
     bottomrow.controls = [statustext]
     bottomcontainer.content = bottomrow
