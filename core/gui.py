@@ -15,14 +15,14 @@ class XSCPGUI:
         icon=icons.UPLOAD_FILE
     )
     guipath = path.expanduser("~")
-    topcontainer = Container(bgcolor=colors.CYAN,padding=10)
+    topcontainer = Container(bgcolor=colors.CYAN,padding=5)
     container = Container()
     containercolumn = Column()
     toprow = Row()
-    hostentry = TextField(label='hote')
-    pwdentry = TextField(label='mot de passe',password=True)
-    userentry = TextField(label='nom d\'utilisateur')
-    destentry = TextField(label='repertoire cible')
+    hostentry = TextField(label='hote',text_size=12)
+    pwdentry = TextField(label='mot de passe',password=True,text_size=12)
+    userentry = TextField(label='nom d\'utilisateur',text_size=12)
+    destentry = TextField(label='repertoire cible',text_size=12)
     docopybutton = ElevatedButton(text='transferer')
     sources = {}
     guidircontent = []
@@ -35,7 +35,7 @@ class XSCPGUI:
     changedirbutton = ElevatedButton(text='go')
     sourceslist = Column()
     sourceslistcontainer = Container(bgcolor=colors.TEAL)
-    bottomcontainer = Container()
+    bottomcontainer = Container(padding=5)
     bottomcolumn = Column(scroll='adaptive')
     statustext = Text()
 
@@ -143,31 +143,31 @@ class XSCPGUI:
     def set_sizes(self):
         self.topcontainer.width = self.pagewidth()
         self.toprow.width = self.pagewidth()
-        self.toprow.height = int(self.pageheight()*5/100)
+        self.toprow.height = int(self.pageheight()*15/100)
         self.hostentry.width = int(self.pagewidth()/5) - 15
         self.pwdentry.width = int(self.pagewidth()/5) - 15
         self.userentry.width = int(self.pagewidth()/5) - 15
         self.destentry.width = int(self.pagewidth()/5) - 5
         self.docopybutton.width = int(self.pagewidth()/5) - 25
-        self.topcontainer.height = int(self.pageheight()*10/100)
+        self.topcontainer.height = int(self.pageheight()*15/100)
 
 
         self.middlecontainer.width = self.pagewidth()
-        self.middlecontainer.height = int(self.pageheight()*90/100)
+        self.middlecontainer.height = int(self.pageheight()*70/100)
         self.middlecolumn.width = self.pagewidth()
-        self.middlecolumn.height = int(self.pageheight()*80/100)
+        self.middlecolumn.height = int(self.pageheight()*70/100)
         self.middlelabelrow.width = int(self.middlecontainer.width)
         self.middlelabelrow.height = int(self.pageheight()*5/100)
         
 
         self.sourceslistcontainer.width = int(self.middlecontainer.width)
-        self.sourceslistcontainer.height = int(self.pageheight()*80/100)
-        self.sourceslist.height = int(self.pageheight()*80/100)
+        self.sourceslistcontainer.height = int(self.pageheight()*70/100)
+        self.sourceslist.height = int(self.pageheight()*70/100)
         
 
         self.bottomcontainer.width = self.pagewidth()
-        self.bottomcontainer.height = int(self.pageheight()*5/100)
-        self.bottomcolumn.height = int(self.pageheight()*5/100)
+        self.bottomcontainer.height = int(self.pageheight()*10/100)
+        self.bottomcolumn.height = int(self.pageheight()*10/100)
         self.page.update()
 
     def pickfilesresulst(self,e:FilePickerResultEvent):
@@ -194,8 +194,10 @@ class XSCPGUI:
         self.page.window_max_width = 800
         self.page.window_max_height = 600  
         self.page.bgcolor = colors.BLUE_GREY_100
+        self.page.bgcolor=colors.CYAN_200
         self.init_base_events()
         self.reset_sizes()
         self.page.on_resize = lambda x:self.reset_sizes(self)
+        self.page.title = "XSCP V0.1 - By dev0ps221"
         self.page.add(self.container)
         self.page.update()
