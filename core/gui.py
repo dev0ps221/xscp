@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-from flet import Container,ElevatedButton,Column,Row,DropDown,TextField,Text,dropdown,colors
+from flet import Container,Page,ElevatedButton,Column,Row,Dropdown,TextField,Text,dropdown,colors
 
 class XSCPGUI:
     page = None
     topcontainer = Container()
+    container = Container()
+    containercolumn = Column()
     toprow = Row()
     hostentry = TextField(label='hote')
     pwdentry = TextField(label='mot de passe',password=True)
@@ -19,19 +21,23 @@ class XSCPGUI:
     foldercontent = Column()
     bottomcontainer = Container()
     bottomrow = Row()
-    staustext = Text()
+    statustext = Text()
 
 
+    toprow.controls = [destentry,hostentry,userentry,pwdentry,docopybutton]
     topcontainer.content = toprow
-    toprow.controls = [destentry,hostentry,userentry,pwdentry]
 
 
     foldercontentcontainer.content = foldercontent
     middlelabelcontainer.content = middlelabel
     middlecolumn.controls = [middlelabelcontainer,foldercontentcontainer]
     middlecontainer.content = middlecolumn
-    
 
+    bottomrow.controls = [statustext]
+    bottomcontainer.content = bottomrow
+    
+    containercolumn.controls = [topcontainer,middlecontainer,bottomcontainer]
+    container.content = containercolumn
 
     def pagewidth(self):
         return self.page.window_width if self.page else 0
@@ -49,6 +55,8 @@ class XSCPGUI:
         self.bottomcontainer.width = self.pagewidth()
         self.bottomcontainer.height = int(self.pageheight()*10/100)
 
-    def __loop(self,Page:page):
+
+    def _loop(self,page:Page):
         self.page = page   
         self.reset_sizes()
+        self.page.add(self.container)
