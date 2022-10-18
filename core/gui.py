@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flet import Container,Column,Row,DropDown,TextField,Text,dropdown,colors
+from flet import Container,ElevatedButton,Column,Row,DropDown,TextField,Text,dropdown,colors
 
 class XSCPGUI:
     page = None
@@ -9,6 +9,7 @@ class XSCPGUI:
     pwdentry = TextField(label='mot de passe',password=True)
     userentry = TextField(label='nom d\'utilisateur')
     destentry = TextField(label='repertoire cible')
+    docopybutton = ElevatedButton(text='transferer')
     sources = []
     middlecontainer = Container()
     middlecolumn = Column()
@@ -17,15 +18,19 @@ class XSCPGUI:
     foldercontentcontainer = Container()
     foldercontent = Column()
     bottomcontainer = Container()
+    bottomrow = Row()
+    staustext = Text()
 
 
     topcontainer.content = toprow
+    toprow.controls = [destentry,hostentry,userentry,pwdentry]
+
 
     foldercontentcontainer.content = foldercontent
     middlelabelcontainer.content = middlelabel
     middlecolumn.controls = [middlelabelcontainer,foldercontentcontainer]
     middlecontainer.content = middlecolumn
-
+    
 
 
     def pagewidth(self):
