@@ -3,6 +3,7 @@ from flet import Container,Page,ElevatedButton,Column,Row,Dropdown,TextField,Tex
 
 class XSCPGUI:
     page = None
+    guipath = "~/"
     topcontainer = Container()
     container = Container()
     containercolumn = Column()
@@ -16,11 +17,14 @@ class XSCPGUI:
     middlecontainer = Container()
     middlerow = Row()
     middlelabelcontainer = Container()
+    middlelabelrow = Row()
     middlelabel = Text(value='selectionnez les fichiers|repertoires à transferer')
+    changedirfield = TextField(value=guipath,label='répertoire actuel')
+    changedirbutton = ElevatedButton(text='go')
     foldercontentbox = Column()
-    foldercontentboxcontainer = Container(scroll='adaptive')
+    foldercontentboxcontainer = Container()
     foldercontentcontainer = Container()
-    foldercontent = Column()
+    foldercontent = Column(scroll='adaptive')
     sourceslist = Column()
     sourceslistcontainer = Container(bgcolor=colors.TEAL)
     bottomcontainer = Container()
@@ -34,7 +38,8 @@ class XSCPGUI:
 
     foldercontentcontainer.content = foldercontent
     middlelabelcontainer.content = middlelabel
-    foldercontentbox.controls = [middlelabelcontainer,foldercontentcontainer]
+    middlelabelrow.controls = [middlelabelcontainer,changedirfield,changedirbutton]
+    foldercontentbox.controls = [middlelabelrow,foldercontentcontainer]
     foldercontentboxcontainer.content = foldercontentbox
 
     sourceslistcontainer.content = sourceslist
@@ -71,6 +76,7 @@ class XSCPGUI:
         self.sourceslistcontainer.height = self.middlecontainer.height-5
         self.sourceslist.height = self.middlecontainer.height-5
         self.foldercontentcontainer.height = self.middlecontainer.height-5
+        self.foldercontent.height = self.middlecontainer.height-5
         self.foldercontentboxcontainer.width = int(self.middlecontainer.width*80/100)
         self.sourceslistcontainer.width = int(self.middlecontainer.width*30/100)
         self.bottomcontainer.width = self.pagewidth()
@@ -79,5 +85,6 @@ class XSCPGUI:
 
     def _loop(self,page:Page):
         self.page = page   
+        self.page.bgcolor = colors.BLUE_GREY_100
         self.reset_sizes()
         self.page.add(self.container)
