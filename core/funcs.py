@@ -18,19 +18,11 @@ class XSCPFUNCS:
         user = self.get_keydata_from(data,'user',None)
         pwd = self.get_keydata_from(data,'pwd',None)
         if len(sources) and dest and host and user and pwd:
-            actionstr = f"sshpass -p '{pwd}' scp -rv {self.build_sources_string(sources)} {user}@{host}:{dest}" 
-            print(actionstr)
-
+            actionstr = f"sshpass -p '{pwd}' scp -rv  -o \"StrictHostKeyChecking no\" {self.build_sources_string(sources)} {user}@{host}:{dest}" 
+            try:
+                system(actionstr)
+            except Exception as e:
+                print(e)
 funcs = XSCPFUNCS()
 
 
-
-data = {}
-data['sources'] = []
-data['sources'].append('/home/dev0ps221/xscpsrc/x.ovpn')
-data['sources'].append('/home/dev0ps221/Downloads/AUD-20220820-WA0104.mp3')
-data['host']='127.0.0.1'
-data['dest']='/home/dev0ps221/justcopy'
-data['user']=input('username>')
-data['pwd']=getpass('password>')
-funcs.docopy(data)
