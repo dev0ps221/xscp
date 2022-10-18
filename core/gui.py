@@ -4,7 +4,7 @@ from flet import Container,Page,ElevatedButton,Column,Row,Dropdown,TextField,Tex
 class XSCPGUI:
     page = None
     guipath = "~/"
-    topcontainer = Container()
+    topcontainer = Container(bgcolor=colors.CYAN,padding=10)
     container = Container()
     containercolumn = Column()
     toprow = Row()
@@ -77,8 +77,8 @@ class XSCPGUI:
         self.sourceslist.height = self.middlecontainer.height-5
         self.foldercontentcontainer.height = self.middlecontainer.height-5
         self.foldercontent.height = self.middlecontainer.height-5
-        self.foldercontentboxcontainer.width = int(self.middlecontainer.width*80/100)
-        self.sourceslistcontainer.width = int(self.middlecontainer.width*30/100)
+        self.foldercontentboxcontainer.width = int(self.middlecontainer.width*80/100)-5
+        self.sourceslistcontainer.width = int(self.middlecontainer.width*20/100)-5
         self.bottomcontainer.width = self.pagewidth()
         self.bottomcontainer.height = int(self.pageheight()*10/100)
 
