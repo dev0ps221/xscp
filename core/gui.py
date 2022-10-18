@@ -5,7 +5,11 @@ class XSCPGUI:
     page = None
     pick_files_dialog = FilePicker()
     selectfilesbutton = ElevatedButton(
-        "Pick files",
+        "Selectionner des fichiers",
+        icon=icons.UPLOAD_FILE
+    )
+    selectfoldersbutton = ElevatedButton(
+        "Selectionner des dossiers",
         icon=icons.UPLOAD_FILE
     )
     guipath = path.expanduser("~")
@@ -40,7 +44,7 @@ class XSCPGUI:
     sourceslistcontainer.content = sourceslist
 
     middlelabelcontainer.content = middlelabel
-    middlelabelrow.controls = [middlelabelcontainer,pick_files_dialog,selectfilesbutton]
+    middlelabelrow.controls = [middlelabelcontainer,pick_files_dialog,selectfilesbutton,selectfoldersbutton]
     middlecolumn.controls = [middlelabelrow,sourceslistcontainer]
     middlecontainer.content = middlecolumn
 
@@ -52,16 +56,27 @@ class XSCPGUI:
     container.content = containercolumn
 
     def update_sources(self,sourcesfiles):
-        for source in sourcesfiles:
-            self.sources[source.name] = source
-        self.update_sources_view()
+        if sourcesfiles is not None:
+            for source in sourcesfiles:
+                self.sources[source.name] = {'name':source.name,'path':source.path}
+            self.update_sources_view()
+
+    def update_dir_sources(self,sourcesfolders):
+        if sourcesfolders is not None:
+            print(sourcesfolders)
+            for [sourcename,sourcepath] in sourcesfolders:
+                print(sourcename)
+                self.sources[sourcename] = {'name':sourcename,'path':sourcepath}
+            self.update_sources_view()
+        
     
     def sources_list(self):
         return [ self.sources[source].path for source in self.sources ]
 
     def update_sources_view(self):
         self.sourceslist.controls = []
-        def do_remove_source(sourcek):
+        def do_remove_source(e):
+            sourcek = e.control.tooltip
             sources = {}
             for k in self.sources:
                 if k is not sourcek:
@@ -74,9 +89,9 @@ class XSCPGUI:
             source = self.sources[sourcek]
             sourcelemcontainer  = Container(padding=10)
             sourcelemrow        = Row()
-            sourcelemname       = Text(value=f"{source.name}")
-            sourcelempath       = Text(value=f"{source.path}")
-            sourcelemdelete     = ElevatedButton(text="retirer",name=source.name,bgcolor=colors.RED_200,on_click=lambda x :do_remove_source(x))
+            sourcelemname       = Text(value=f"{source['name']}")
+            sourcelempath       = Text(value=f"{source['path']}")
+            sourcelemdelete     = ElevatedButton(text="retirer",tooltip=source['name'],bgcolor=colors.RED_200,on_click=lambda x :do_remove_source(x))
             sourcelemrow.controls = [sourcelemname,sourcelempath,sourcelemdelete]
             sourcelemcontainer.content = sourcelemrow
             self.sourceslist.controls.append(sourcelemcontainer)
@@ -122,7 +137,10 @@ class XSCPGUI:
         self.page.update()
 
     def pickfilesresulst(self,e:FilePickerResultEvent):
-        self.update_sources(e.files)
+        if e.path:
+            self.update_dir_sources([e.path.split('/')[-1],e.path])
+        if e.files:
+            self.update_sources(e.files)
         self.update_sources_view()
 
 
@@ -131,6 +149,7 @@ class XSCPGUI:
         self.selectfilesbutton.on_click=lambda _: self.pick_files_dialog.pick_files(
             allow_multiple=True
         )
+        self.selectfoldersbutton.on_click=lambda _: self.pick_files_dialog.get_directory_path()
         
     def _loop(self,page:Page):
         self.page = page   
