@@ -18,11 +18,11 @@ class XSCPGUI:
     middlelabelcontainer = Container()
     middlelabel = Text(value='selectionnez les fichiers|repertoires à transferer')
     foldercontentbox = Column()
-    foldercontentboxcontainer = Container()
+    foldercontentboxcontainer = Container(scroll='adaptive')
     foldercontentcontainer = Container()
     foldercontent = Column()
     sourceslist = Column()
-    sourceslistcontainer = Container()
+    sourceslistcontainer = Container(bgcolor=colors.TEAL)
     bottomcontainer = Container()
     bottomrow = Row()
     statustext = Text()
@@ -60,14 +60,19 @@ class XSCPGUI:
     def reset_sizes(self):
         self.topcontainer.width = self.pagewidth()
         self.toprow.width = self.pagewidth()
-        self.hostentry.width = int(self.pagewidth()/5) - 10
-        self.pwdentry.width = int(self.pagewidth()/5) - 10
-        self.userentry.width = int(self.pagewidth()/5) - 10
-        self.destentry.width = int(self.pagewidth()/5) - 10
-        self.docopybutton.width = int(self.pagewidth()/5) - 10
-        self.topcontainer.height = int(self.pageheight()*20/100)
+        self.hostentry.width = int(self.pagewidth()/5) - 15
+        self.pwdentry.width = int(self.pagewidth()/5) - 15
+        self.userentry.width = int(self.pagewidth()/5) - 15
+        self.destentry.width = int(self.pagewidth()/5) - 5
+        self.docopybutton.width = int(self.pagewidth()/5) - 25
+        self.topcontainer.height = int(self.pageheight()*10/100)
         self.middlecontainer.width = self.pagewidth()
         self.middlecontainer.height = int(self.pageheight()*70/100)
+        self.sourceslistcontainer.height = self.middlecontainer.height-5
+        self.sourceslist.height = self.middlecontainer.height-5
+        self.foldercontentcontainer.height = self.middlecontainer.height-5
+        self.foldercontentboxcontainer.width = int(self.middlecontainer.width*80/100)
+        self.sourceslistcontainer.width = int(self.middlecontainer.width*30/100)
         self.bottomcontainer.width = self.pagewidth()
         self.bottomcontainer.height = int(self.pageheight()*10/100)
 
