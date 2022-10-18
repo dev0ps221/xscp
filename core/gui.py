@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-from flet import Container,Page,FilePicker,FilePickerResultEvent,ElevatedButton,Column,Row,Dropdown,TextField,Text,dropdown,colors
+from flet import Container,Page,FilePicker,FilePickerResultEvent,ElevatedButton,Column,Row,Dropdown,TextField,Text,dropdown,icons,colors
 from os import path,listdir
 class XSCPGUI:
     page = None
-    pick_files_dialog = FilePicker(on_result=self.pickfilesresulst)
+    pick_files_dialog = FilePicker()
+    selectfilesbutton = ElevatedButton(
+        "Pick files",
+        icon=icons.UPLOAD_FILE
+    )
     guipath = path.expanduser("~")
     topcontainer = Container(bgcolor=colors.CYAN,padding=10)
     container = Container()
@@ -14,19 +18,15 @@ class XSCPGUI:
     userentry = TextField(label='nom d\'utilisateur')
     destentry = TextField(label='repertoire cible')
     docopybutton = ElevatedButton(text='transferer')
-    sources = []
+    sources = {}
     guidircontent = []
     middlecontainer = Container()
-    middlerow = Row()
+    middlecolumn = Column()
     middlelabelcontainer = Container()
     middlelabelrow = Row()
     middlelabel = Text(value='selectionnez les fichiers|repertoires à transferer')
     changedirfield = TextField(value=guipath,label='répertoire actuel')
     changedirbutton = ElevatedButton(text='go')
-    foldercontentbox = Column()
-    foldercontentboxcontainer = Container()
-    foldercontentcontainer = Container()
-    foldercontent = Column(scroll='always')
     sourceslist = Column()
     sourceslistcontainer = Container(bgcolor=colors.TEAL)
     bottomcontainer = Container()
@@ -37,17 +37,12 @@ class XSCPGUI:
     toprow.controls = [destentry,hostentry,userentry,pwdentry,docopybutton]
     topcontainer.content = toprow
 
-
-    foldercontentcontainer.content = foldercontent
-    middlelabelcontainer.content = middlelabel
-    middlelabelrow.controls = [middlelabelcontainer,changedirfield,changedirbutton]
-    foldercontentbox.controls = [middlelabelrow,foldercontentcontainer]
-    foldercontentboxcontainer.content = foldercontentbox
-
     sourceslistcontainer.content = sourceslist
 
-    middlerow.controls = [foldercontentboxcontainer,sourceslistcontainer]
-    middlecontainer.content = middlerow
+    middlelabelcontainer.content = middlelabel
+    middlelabelrow.controls = [middlelabelcontainer,pick_files_dialog,selectfilesbutton]
+    middlecolumn.controls = [middlelabelrow,sourceslistcontainer]
+    middlecontainer.content = middlecolumn
 
 
     bottomrow.controls = [statustext]
@@ -55,6 +50,37 @@ class XSCPGUI:
     
     containercolumn.controls = [topcontainer,middlecontainer,bottomcontainer]
     container.content = containercolumn
+
+    def update_sources(self,sourcesfiles):
+        for source in sourcesfiles:
+            self.sources[source.name] = source
+        self.update_sources_view()
+    
+    def sources_list(self):
+        return [ self.sources[source].path for source in self.sources ]
+
+    def update_sources_view(self):
+        self.sourceslist.controls = []
+        def do_remove_source(sourcek):
+            sources = {}
+            for k in self.sources:
+                if k is not sourcek:
+                    sources[k] = self.sources[k]
+            self.sources = sources
+            self.update_sources_view()
+
+        for sourcek in self.sources:
+            sk = sourcek
+            source = self.sources[sourcek]
+            sourcelemcontainer  = Container(padding=10)
+            sourcelemrow        = Row()
+            sourcelemname       = Text(value=f"{source.name}")
+            sourcelempath       = Text(value=f"{source.path}")
+            sourcelemdelete     = ElevatedButton(text="retirer",name=source.name,bgcolor=colors.RED_200,on_click=lambda x :do_remove_source(x))
+            sourcelemrow.controls = [sourcelemname,sourcelempath,sourcelemdelete]
+            sourcelemcontainer.content = sourcelemrow
+            self.sourceslist.controls.append(sourcelemcontainer)
+        self.sourceslistcontainer.update()
 
     def setguipath(self,guipath):
         self.guipath = guipath
@@ -65,20 +91,6 @@ class XSCPGUI:
     def pageheight(self):
         return self.page.window_height if self.page else 0
     
-    def showdircontent(self):
-        self.guidircontent = listdir(self.guipath)
-        self.update_dircontent_view()
-
-    def update_dircontent_view(self):
-        self.foldercontent.controls = []
-        for elem in self.guidircontent:
-            elemcontrolcontainer = Container()
-            elemcontrol = Row()
-            elemcontrolname = Text(value=elem)
-            elemcontrol.controls = [elemcontrolname]
-            elemcontrolcontainer.content = elemcontrol
-            self.foldercontent.controls.append(elemcontrolcontainer)
-        self.foldercontent.update()
 
     def reset_sizes(self,ev=None):
         self.topcontainer.width = self.pagewidth()
@@ -93,29 +105,16 @@ class XSCPGUI:
 
         self.middlecontainer.width = self.pagewidth()
         self.middlecontainer.height = int(self.pageheight()*90/100)
-        self.middlerow.width = self.pagewidth()
-        self.middlerow.height = int(self.pageheight()*80/100)
-        self.middlelabelrow.width = int(self.middlecontainer.width*77.6/100)
+        self.middlecolumn.width = self.pagewidth()
+        self.middlecolumn.height = int(self.pageheight()*80/100)
+        self.middlelabelrow.width = int(self.middlecontainer.width)
         self.middlelabelrow.height = int(self.pageheight()*5/100)
         
 
-        self.sourceslistcontainer.width = int(self.middlecontainer.width*20/100)
+        self.sourceslistcontainer.width = int(self.middlecontainer.width)
         self.sourceslistcontainer.height = int(self.pageheight()*80/100)
         self.sourceslist.height = int(self.pageheight()*80/100)
         
-        self.foldercontentboxcontainer.width = int(self.middlecontainer.width*77.6/100)
-        self.foldercontentboxcontainer.height = int(self.pageheight()*80/100)
-        self.foldercontentbox.width = int(self.middlecontainer.width*77.6/100)
-        self.foldercontentbox.height = int(self.pageheight()*80/100)
-        
-        self.foldercontentcontainer.width = int(self.pagewidth()*80/100)
-        self.foldercontentcontainer.height = int(self.pageheight()*80/100)
-        
-
-        self.foldercontent.width = int(self.middlecontainer.width*77.6/100)
-        self.foldercontent.height = int(self.pageheight()*70/100) 
-        
-
 
         self.bottomcontainer.width = self.pagewidth()
         self.bottomcontainer.height = int(self.pageheight()*5/100)
@@ -123,22 +122,20 @@ class XSCPGUI:
         self.page.update()
 
     def pickfilesresulst(self,e:FilePickerResultEvent):
-
+        self.update_sources(e.files)
+        self.update_sources_view()
 
 
     def init_base_events(self):
-        def on_changedir_field(ev):
-            self.setguipath(self.changedirfield.value)
-        def on_do_changedir(ev):
-            self.showdircontent()
-        self.changedirfield.on_change = on_changedir_field
-        self.changedirbutton.on_click = on_do_changedir
-
+        self.pick_files_dialog.on_result=self.pickfilesresulst
+        self.selectfilesbutton.on_click=lambda _: self.pick_files_dialog.pick_files(
+            allow_multiple=True
+        )
+        
     def _loop(self,page:Page):
         self.page = page   
         self.page.bgcolor = colors.BLUE_GREY_100
-        self.reset_sizes()
         self.init_base_events()
+        self.reset_sizes()
         self.page.add(self.container)
         self.page.on_resize = lambda x:self.reset_sizes(self)
-        self.showdircontent()
