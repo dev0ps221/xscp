@@ -55,6 +55,13 @@ class XSCPGUI:
     containercolumn.controls = [topcontainer,middlecontainer,bottomcontainer]
     container.content = containercolumn
 
+    def init_transfert(self):
+        data = self.check_transfert_data()
+        if data:
+            print('lets make the transfert')
+            print(data)
+
+
     def update_sources(self,sourcesfiles):
         if sourcesfiles is not None:
             for source in sourcesfiles:
@@ -63,15 +70,17 @@ class XSCPGUI:
 
     def update_dir_sources(self,sourcesfolders):
         if sourcesfolders is not None:
-            print(sourcesfolders)
             for [sourcename,sourcepath] in sourcesfolders:
-                print(sourcename)
                 self.sources[sourcename] = {'name':sourcename,'path':sourcepath}
             self.update_sources_view()
         
     
     def sources_list(self):
-        return [ self.sources[source].path for source in self.sources ]
+        ret = []
+        for source in self.sources:
+            if self.sources[source]['path']:
+                ret.append(self.sources[source]['path'])
+        return ret 
 
     def update_sources_view(self):
         self.sourceslist.controls = []
@@ -106,8 +115,22 @@ class XSCPGUI:
     def pageheight(self):
         return self.page.window_height if self.page else 0
     
-    def get_transfert_data(self):
-        host 
+    def check_transfert_data(self):
+        host = self.hostentry.value
+        user = self.userentry.value
+        pwd = self.pwdentry.value
+        dest = self.destentry.value
+        sources = self.sources_list()
+        if host and user and pwd and dest and len(sources):
+            return {
+                'host':host,
+                'user':user,
+                'pwd':pwd,
+                'dest':dest,
+                'sources':sources,
+            }
+        else return None
+        
 
     def reset_sizes(self,ev=None):
         self.topcontainer.width = self.pagewidth()
