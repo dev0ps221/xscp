@@ -7,11 +7,11 @@ class XSCPGUI:
     page = None
     pick_files_dialog = FilePicker()
     selectfilesbutton = ElevatedButton(
-        "Selectionner des fichiers",
+        "fichiers",
         icon=icons.UPLOAD_FILE
     )
     selectfoldersbutton = ElevatedButton(
-        "Selectionner des dossiers",
+        "dossiers",
         icon=icons.UPLOAD_FILE
     )
     guipath = path.expanduser("~")
@@ -36,7 +36,7 @@ class XSCPGUI:
     sourceslist = Column()
     sourceslistcontainer = Container(bgcolor=colors.TEAL)
     bottomcontainer = Container()
-    bottomrow = Row()
+    bottomcolumn = Column(scroll='adaptive')
     statustext = Text()
 
 
@@ -51,8 +51,8 @@ class XSCPGUI:
     middlecontainer.content = middlecolumn
 
 
-    bottomrow.controls = [statustext]
-    bottomcontainer.content = bottomrow
+    bottomcolumn.controls = [statustext]
+    bottomcontainer.content = bottomcolumn
     
     containercolumn.controls = [topcontainer,middlecontainer,bottomcontainer]
     container.content = containercolumn
@@ -61,7 +61,8 @@ class XSCPGUI:
         data = self.check_transfert_data()
         if data:
             copyresults = self.funcs.docopy(data)
-            # print(copyresults)
+            self.statustext.value = ('\n'.join(copyresults)+"\naction terminée")
+            self.statustext.update()
         else:
             print('no enough data to start the copy')
 
@@ -137,7 +138,9 @@ class XSCPGUI:
         
 
     def reset_sizes(self,ev=None):
-        
+        self.set_sizes()
+
+    def set_sizes(self):
         self.topcontainer.width = self.pagewidth()
         self.toprow.width = self.pagewidth()
         self.toprow.height = int(self.pageheight()*5/100)
@@ -147,6 +150,7 @@ class XSCPGUI:
         self.destentry.width = int(self.pagewidth()/5) - 5
         self.docopybutton.width = int(self.pagewidth()/5) - 25
         self.topcontainer.height = int(self.pageheight()*10/100)
+
 
         self.middlecontainer.width = self.pagewidth()
         self.middlecontainer.height = int(self.pageheight()*90/100)
@@ -163,7 +167,7 @@ class XSCPGUI:
 
         self.bottomcontainer.width = self.pagewidth()
         self.bottomcontainer.height = int(self.pageheight()*5/100)
-        self.bottomrow.height = int(self.pageheight()*5/100)
+        self.bottomcolumn.height = int(self.pageheight()*5/100)
         self.page.update()
 
     def pickfilesresulst(self,e:FilePickerResultEvent):
@@ -184,15 +188,14 @@ class XSCPGUI:
         
     def _loop(self,page:Page):
         self.page = page  
-        self.page.window_width = 800
-        self.page.window_height = 600
+        self.page.minimized = True
+        self.page.window_min_width = 800
+        self.page.window_min_height = 600
         self.page.window_max_width = 800
-        self.page.window_max_height = 600
-        self.page.window_resizable = False
-        self.page.window_minimizable = False
-        self.page.window_maximizable = False 
+        self.page.window_max_height = 600  
         self.page.bgcolor = colors.BLUE_GREY_100
         self.init_base_events()
         self.reset_sizes()
-        self.page.add(self.container)
         self.page.on_resize = lambda x:self.reset_sizes(self)
+        self.page.add(self.container)
+        self.page.update()
