@@ -40,7 +40,7 @@ class XSCPGUI:
     sourceslistcontainer.content = sourceslist
 
     middlerow.controls = [foldercontentboxcontainer,sourceslistcontainer]
-    middlecontainer.content = middlecolumn
+    middlecontainer.content = middlerow
 
 
     bottomrow.controls = [statustext]
